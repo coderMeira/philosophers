@@ -3,12 +3,9 @@
 
 MAKEFLAGS	+= -s
 
-CFLAGS		= -Wall -Werror -Wextra -g
+CFLAGS		= -Wall -Werror -Wextra -g -pthread
 
-NAME		= philosophers
-
-LIBFT_DIR	= lib/libft/src
-LIBFT_EXEC	= lib/libft/bin/libft.a
+NAME		= philo
 
 SRCS		= ${wildcard src/*.c}
 
@@ -16,9 +13,9 @@ OBJS		= $(SRCS:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(LIBFT_EXEC) $(OBJS)
+$(NAME): $(OBJS)
 	echo "Compiling ${NAME}"
-	gcc $(CFLAGS) $(LIBFT_EXEC) $(OBJS) -o $(NAME)
+	gcc $(CFLAGS) $(OBJS) -o $(NAME)
 	mkdir -p obj
 	mv ${OBJS} obj
 	echo "Ready to use!"
