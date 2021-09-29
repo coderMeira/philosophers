@@ -6,6 +6,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 typedef	enum	s_bool
 {
@@ -15,25 +16,33 @@ typedef	enum	s_bool
 
 typedef	struct	s_phil
 {
-	int			nbr;
-	pthread_t	th;
+	int				nbr;
+	t_bool			is_eating;
+	t_bool			is_sleeping;
+	t_bool			is_thinking;
+	int				times_eated;
+	t_environment	*env;
+	pthread_t		th;
 }				t_phil;
-
 
 typedef	struct	s_env
 {
-	int		nbr_philos;
-	int		die_time;
-	int		eat_time;
-	int		sleep_time;
-	int		eat_times;
-	t_phil	phil[200];
+	int				nbr_philos;
+	t_bool			no_deads;
+	int				start_time;
+	int				die_time;
+	int				eat_time;
+	int				sleep_time;
+	int				max_eat_times;
+	t_phil			phil[200];
+	pthread_mutex_t	fork[200];
 }				t_environment;
 
 //LIBFT
 int		ft_strlen(char *str);
 void	terminate(char *error);
 int		ft_atoi(const char *str);
+t_bool	not_int(char *s);
 
 //INITS
 int		init(t_environment *env, char **av);
