@@ -15,12 +15,17 @@ static	void *routine(void *arg)
 	phil = (t_phil *)arg;
 	while(phil->env->no_deads)
 	{
+		if (phil->nbr % 1)
+			waitasec(phil->env->eat_time);
 		if (phil->env->fork[phil->nbr - 1) && phil->env->fork[phil->nbr + 1))
+		{
 			pthread_mutex_lock(env->fork[env->phil->nbr - 1]);
 			pthread_mutex_lock(env->fork[env->phil->nbr + 1]);
 			eat;
-			mutex;
-		if (!forks available)
+			pthread_mutex_unlock(env->fork[env->phil->nbr - 1]);
+			pthread_mutex_unlock(env->fork[env->phil->nbr + 1]);
+		}
+		else (!forks available)
 			think
 	}
 
@@ -46,6 +51,7 @@ static int	init_threads(t_environment	*env)
 		init_philosopher(&(env->phil), env, i);
 		if (pthread_mutex_init(&(env->fork[i]), NULL))
 			return (1);
+
 		if (pthread_create(env->phil[i].th, NULL, &routine, &(env->phil[i])))
             return (1);
 	}
