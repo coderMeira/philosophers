@@ -11,32 +11,60 @@ void timezz()
 static	void *routine(void *arg)
 {
 	t_phil	*phil;
+	t_bool	left;
+	t_bool	right;
+	t_bool	first_think;
 
 	phil = (t_phil *)arg;
+	left = false;
+	right = false;
+	first_think = true;
 	while(phil->env->no_deads)
 	{
-		if (phil->nbr % 1)
+		if (phil->nbr % 2)
 			waitasec(phil->env->eat_time);
-		if (phil->env->fork[phil->nbr - 1) && phil->env->fork[phil->nbr + 1))
+		if (!(pthread_mutex_lock(&(phil->env->fork[(phil->nbr - 1)]))))
 		{
-			pthread_mutex_lock(env->fork[env->phil->nbr - 1]);
-			pthread_mutex_lock(env->fork[env->phil->nbr + 1]);
-			eat;
-			pthread_mutex_unlock(env->fork[env->phil->nbr - 1]);
-			pthread_mutex_unlock(env->fork[env->phil->nbr + 1]);
+			if (!(print_msg("has taken a fork", phil->nbr, currtime())))
+				die();
+			right = true;
 		}
-		else (!forks available)
-			think
+		if (!(pthread_mutex_lock(&(phil->env->fork[phil->env->phil->nbr + 1]))))
+		{
+			if(!(print_msg("has taken a fork", phil->nbr, currtime())))
+				die();
+			left = true;
+		}
+		if (left && right)
+		{
+			if (!(print_msg("is eating", phil->nbr, currtime())))
+				die();
+			wait(phil->env->eat_time);
+			pthread_mutex_unlock(&(phil->env->fork[phil->env->phil->nbr - 1]));
+			pthread_mutex_unlock(&(phil->env->fork[phil->env->phil->nbr + 1]));
+			if (!(print_msg("is sleeping", phil->nbr, currtime())))
+				die();
+			wait(phil->env->sleep_time);
+			if(!(print_msg("is thinking", phil->nbr, currtime())))
+				die();
+			left = false;
+			right = false;
+			phil->times_eated++;
+		}
+		if (phil->times_eated == 0 && first_think)
+		{
+			print_msg("is thinking", phil->nbr, currtime());
+			first_think = false;
+		}
 	}
-
+	return (NULL);
 }
 
 static void	init_philosopher(t_phil	*phil, t_environment *env, int i)
 {
 		phil->nbr = i + 1;
 		phil->is_eating = false;
-		phil->is_thinking = true;
-		phil->is_eating = false;
+		phil->is_sleeping = false;
 		phil->times_eated = 0;
 		phil->env = env;
 }
