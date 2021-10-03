@@ -20,19 +20,12 @@ $(NAME): $(OBJS)
 	mv ${OBJS} obj
 	echo "Ready to use!"
 
-$(LIBFT_EXEC):
-	echo "Compiling libft"
-	${MAKE} -C $(LIBFT_DIR)
-	echo "Libft compiled"
-
 clean:
 	rm -rf obj ${OBJS}
-	${MAKE} -C $(LIBFT_DIR) fclean
 	echo "Objects cleaned"
 
 fclean:
 	rm -rf obj ${OBJS} $(NAME)
-	${MAKE} -C $(LIBFT_DIR) fclean
 	echo "${NAME} and objects cleaned"
 
 re: fclean all
