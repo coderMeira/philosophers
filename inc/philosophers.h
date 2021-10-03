@@ -19,7 +19,7 @@ typedef	struct	s_phil
 	int				nbr;
 	t_bool			is_eating;
 	t_bool			is_sleeping;
-	t_bool			is_thinking;
+	int				think_time;
 	int				times_eated;
 	t_environment	*env;
 	pthread_t		th;
