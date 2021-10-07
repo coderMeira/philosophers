@@ -14,7 +14,16 @@ typedef	enum	s_bool
 	true
 }				t_bool;
 
-typedef	struct	s_env
+typedef	struct	s_phil
+{
+	int						nbr;
+	int						last_eated;
+	int						times_eated;
+	struct s_environment	*env;
+	pthread_t				th;
+}				t_phil;
+
+typedef	struct	s_environment
 {
 	int				nbr_philos;
 	t_bool			no_deads;
@@ -23,17 +32,9 @@ typedef	struct	s_env
 	int				eat_time;
 	int				sleep_time;
 	int				max_eat_times;
+	t_phil			phil[200];
 	pthread_mutex_t	fork[200];
 }				t_environment;
-
-typedef	struct	s_phil
-{
-	int				nbr;
-	int				last_eated;
-	int				times_eated;
-	t_environment	*env;
-	pthread_t		th;
-}				t_phil;
 
 //LIBFT
 int		ft_strlen(char *str);
@@ -42,6 +43,9 @@ int		ft_atoi(const char *str);
 t_bool	not_int(char *s);
 
 //INITS
-int		init(t_environment *env, char **av, t_phil **phils);
+int		init(t_environment *env, char **av);
+
+//PRINTS
+int		print_msg(char *msg, t_phil *phil);
 
 #endif

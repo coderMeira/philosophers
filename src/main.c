@@ -1,6 +1,6 @@
 #include "../inc/philosophers.h"
 
-static	t_bool	check_args(int ac, char **av)
+static t_bool	check_args(int ac, char **av)
 {
 	int	i;
 
@@ -21,29 +21,27 @@ static	t_bool	check_args(int ac, char **av)
 	return (0);
 }
 
-static	t_bool check(int i)
+static int	check(int i)
 {
 	if (i == 1)
-		return (printf("Failed to init threads"));
+		return (printf("Bad data provided for simulation to work properly\n"));
 	if (i == 2)
-		return (printf("Bad data provided for simulation to work properly"));
+		return (printf("Mutex init error\n"));
 	if (i == 3)
-		return (printf("mutex init error\n"));
+		return (printf("Failed to init threads\n"));
 	return (0);
 }
 
 int	main(int ac, char **av)
 {
 	t_environment	*env;
-	t_phil			**phils;
 
-	phils = NULL;
+	env = NULL;
 	if (check_args(ac, av))
 		return (-1);
 	env = malloc(sizeof(t_environment));
-	if (check(init(env, av, phils)))
+	if (check(init(env, av)))
 		return (-1);
-	//	terminate("Init problem");
-	av++;
+	free(env);
 	return (0);
 }
