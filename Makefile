@@ -11,6 +11,9 @@ SRCS		= ${wildcard src/*.c}
 
 OBJS		= $(SRCS:.c=.o)
 
+.o: .c
+	gcc $(CFLAGS) -c $< -o $@
+
 all: $(NAME)
 
 $(NAME): $(OBJS)
@@ -20,6 +23,9 @@ $(NAME): $(OBJS)
 	mv ${OBJS} obj
 	echo "Ready to use!"
 
+debug:
+	gcc $(CFLAGS) $(SRCS) -o debug
+
 clean:
 	rm -rf obj ${OBJS}
 	echo "Objects cleaned"
@@ -27,6 +33,10 @@ clean:
 fclean:
 	rm -rf obj ${OBJS} $(NAME)
 	echo "${NAME} and objects cleaned"
+
+cleandebug:
+	rm -rf obj ${OBJS} debug debug.dSYM
+	echo "debug and objects cleaned"
 
 re: fclean all
 
