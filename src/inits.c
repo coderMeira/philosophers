@@ -1,28 +1,19 @@
 #include "../inc/philosophers.h"
 
-void timezz()
-{
-	struct timeval curr_time;
-
-	gettimeofday(&curr_time, NULL);
-
-}
-
 static void	*routine(void *arg)
 {
-	t_phil	*phil;
-	t_bool	left;
-	t_bool	right;
-	t_bool	first_think;
+	t_phil			*phil;
+	t_bool			left;
+	t_bool			right;
+	t_bool			first_think;
 
 	phil = (t_phil *)arg;
 	left = false;
 	right = false;
 	first_think = true;
-
 	printf("philo %d\n", phil->nbr);
 	if (phil->nbr % 2)
-		usleep(phil->env->eat_time / 2);
+		usleep(phil->env->eat_time * 1000);
 	while(phil->env->no_deads)
 	{
 		if (!right && !(pthread_mutex_lock(&(phil->env->fork[(phil->nbr - 1)]))))
@@ -41,13 +32,13 @@ static void	*routine(void *arg)
 		{
 			if(print_msg("is eating", phil))
 				return NULL;
-			wait(&(phil->env->eat_time));
+			usleep(phil->env->eat_time * 1000);
+			phil->last_eated = curr_time();
 			pthread_mutex_unlock(&(phil->env->fork[phil->env->phil->nbr - 1]));
 			pthread_mutex_unlock(&(phil->env->fork[phil->env->phil->nbr + 1]));
 			if(print_msg("is sleeping", phil))
 				return NULL;
-			wait(&(phil->env->sleep_time));
-			phil->last_eated = gettimeofday();
+			usleep(phil->env->sleep_time * 1000);
 			if(print_msg("is thinking", phil))
 				return NULL;
 			left = false;
@@ -80,9 +71,10 @@ static int	init_philosopher(t_phil	*phil, t_environment *env, int i)
 
 static int	init_threads(t_environment	*env)
 {
-	int	i;
+	int				i;
 
 	i = 0;
+	env->start_time = curr_time();
 	while (i < env->nbr_philos)
 	{
 		init_philosopher(&(env->phil[i]), env, i);

@@ -34,7 +34,7 @@ fclean:
 	rm -rf obj ${OBJS} $(NAME)
 	echo "${NAME} and objects cleaned"
 
-cleandebug:
+dclean:
 	rm -rf obj ${OBJS} debug debug.dSYM
 	echo "debug and objects cleaned"
 
