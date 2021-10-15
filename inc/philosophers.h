@@ -17,6 +17,8 @@ typedef	enum	s_bool
 typedef	struct	s_phil
 {
 	int						nbr;
+	t_bool					left;
+	t_bool					right;
 	long long				last_eated;
 	int						times_eated;
 	struct s_environment	*env;

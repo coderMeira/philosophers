@@ -3,57 +3,50 @@
 static void	*routine(void *arg)
 {
 	t_phil			*phil;
-	t_bool			left;
-	t_bool			right;
-	t_bool			first_think;
 
 	phil = (t_phil *)arg;
-	left = false;
-	right = false;
-	first_think = true;
 	printf("philo %d\n", phil->nbr);
 	if (phil->nbr % 2)
+	{
+		if(print_msg("is thinking", phil))
+			return NULL;
 		usleep(phil->env->eat_time * 1000);
+	}
 	while(phil->env->no_deads)
 	{
-		if (!right && !(pthread_mutex_lock(&(phil->env->fork[(phil->nbr - 1)]))))
+		if (!phil->right && !(pthread_mutex_lock(&(phil->env->fork[phil->nbr - 1]))))
 		{
 			if(print_msg("has taken a fork", phil))
 				return NULL;
-			right = true;
+			phil->right = true;
 		}
-		if (!left && !(pthread_mutex_lock(&(phil->env->fork[phil->env->phil->nbr + 1]))))
+		if (!phil->left && !(pthread_mutex_lock(&(phil->env->fork[phil->nbr]))))
 		{
 			if(print_msg("has taken a fork", phil))
 				return NULL;
-			left = true;
+			phil->left = true;
 		}
-		if (left && right)
+		if (phil->left && phil->right)
 		{
 			if(print_msg("is eating", phil))
 				return NULL;
 			usleep(phil->env->eat_time * 1000);
 			phil->last_eated = curr_time();
-			pthread_mutex_unlock(&(phil->env->fork[phil->env->phil->nbr - 1]));
-			pthread_mutex_unlock(&(phil->env->fork[phil->env->phil->nbr + 1]));
+			pthread_mutex_unlock(&(phil->env->fork[phil->nbr - 1]));
+			pthread_mutex_unlock(&(phil->env->fork[phil->nbr]));
+			if (++phil->times_eated >= phil->env->max_eat_times && phil->env->no_deads)
+			{
+				phil->env->no_deads = false;
+				printf("%lli\t%d %s\n", (curr_time() - phil->env->start_time), phil->nbr, "died");
+				return NULL;
+			}
 			if(print_msg("is sleeping", phil))
 				return NULL;
 			usleep(phil->env->sleep_time * 1000);
 			if(print_msg("is thinking", phil))
 				return NULL;
-			left = false;
-			right = false;
-			if (++phil->times_eated == phil->env->max_eat_times)
-			{
-				phil->env->no_deads = false;
-				return NULL;
-			}
-		}
-		if (phil->times_eated == 0 && first_think)
-		{
-			if(print_msg("is thinking", phil))
-				return NULL;
-			first_think = false;
+			phil->left = false;
+			phil->right = false;
 		}
 	}
 	return NULL;
@@ -62,10 +55,11 @@ static void	*routine(void *arg)
 static int	init_philosopher(t_phil	*phil, t_environment *env, int i)
 {
 		phil->nbr = i + 1;
+		phil->left = false;
+		phil->right = false;
 		phil->last_eated = 0;
 		phil->times_eated = 0;
 		phil->env = env;
-		phil->th = NULL;
 		return (0);
 }
 
