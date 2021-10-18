@@ -21,6 +21,8 @@ typedef	struct	s_phil
 	t_bool					right;
 	long long				last_eated;
 	int						times_eated;
+	pthread_mutex_t			*left_fork;
+	pthread_mutex_t			*right_fork;
 	struct s_environment	*env;
 	pthread_t				th;
 }				t_phil;
@@ -53,6 +55,9 @@ int			print_msg(char *msg, t_phil *phil);
 //TIME
 long long	curr_time(void);
 long long	time_diff(long long start_time, long long end_time);
+
+//PHILS
+int			grab_forks(t_phil *phil);
 
 
 #endif
