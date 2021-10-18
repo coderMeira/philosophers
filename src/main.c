@@ -32,16 +32,46 @@ static int	check(int i)
 	return (0);
 }
 
+static int destroy_mutexes(t_environment *env)
+{
+	int	i;
+
+	i = 0;
+	while (i < env->nbr_philos)
+	{
+		if (pthread_mutex_destroy(&(env->fork[i])))
+			return (printf("Failed to destroy mutexes\n"));
+		i++;
+	}
+	return (0);
+}
+
+static void wait_for_threads(t_environment *env)
+{
+	int	i;
+
+	i = 0;
+	while (i < env->nbr_philos)
+	{
+		pthread_join(env->phil[i].th, NULL);
+		i++;
+	}
+}
+
 int	main(int ac, char **av)
 {
 	t_environment	*env;
 
 	env = NULL;
+	if ((ft_atoi(av[1])) == 1)
+		return (printf("%d\t1 died\n", ft_atoi(av[2])));
 	if (check_args(ac, av))
 		return (-1);
 	env = malloc(sizeof(t_environment));
 	if (check(init(env, av)))
 		return (-1);
+	wait_for_threads(env);
+	destroy_mutexes(env);
 	free(env);
 	return (0);
 }

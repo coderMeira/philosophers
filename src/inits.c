@@ -7,39 +7,27 @@ static void	*routine(void *arg)
 	phil = (t_phil *)arg;
 	printf("philo %d\n", phil->nbr);
 	if (phil->nbr % 2)
-	{
-		if(print_msg("is thinking", phil))
-			return NULL;
-		usleep(phil->env->eat_time * 1000);
-	}
+		usleep(phil->env->eat_time * 1500);
 	while(phil->env->no_deads)
 	{
-		if (!phil->right && !(pthread_mutex_lock(&(phil->env->fork[phil->nbr - 1]))))
+		if (!(pthread_mutex_lock(phil->left_fork) && !(pthread_mutex_lock(phil->right_fork))))
 		{
 			if(print_msg("has taken a fork", phil))
 				return NULL;
-			phil->right = true;
-		}
-		if (!phil->left && !(pthread_mutex_lock(&(phil->env->fork[phil->nbr]))))
-		{
 			if(print_msg("has taken a fork", phil))
 				return NULL;
 			phil->left = true;
+			phil->right = true;
 		}
 		if (phil->left && phil->right)
 		{
+			phil->times_eated++;
 			if(print_msg("is eating", phil))
 				return NULL;
 			usleep(phil->env->eat_time * 1000);
 			phil->last_eated = curr_time();
-			pthread_mutex_unlock(&(phil->env->fork[phil->nbr - 1]));
-			pthread_mutex_unlock(&(phil->env->fork[phil->nbr]));
-			if (++phil->times_eated >= phil->env->max_eat_times && phil->env->no_deads)
-			{
-				phil->env->no_deads = false;
-				printf("%lli\t%d %s\n", (curr_time() - phil->env->start_time), phil->nbr, "died");
-				return NULL;
-			}
+			pthread_mutex_unlock(phil->right_fork);
+			pthread_mutex_unlock(phil->left_fork);
 			if(print_msg("is sleeping", phil))
 				return NULL;
 			usleep(phil->env->sleep_time * 1000);
@@ -60,6 +48,11 @@ static int	init_philosopher(t_phil	*phil, t_environment *env, int i)
 		phil->last_eated = 0;
 		phil->times_eated = 0;
 		phil->env = env;
+		phil->th = NULL;
+		phil->left_fork = &(env->fork[phil->nbr]);
+		phil->right_fork = &(env->fork[phil->nbr - 1]);
+		if (phil->nbr == env->nbr_philos)
+			phil->left_fork = &(env->fork[0]);
 		return (0);
 }
 
@@ -71,9 +64,14 @@ static int	init_threads(t_environment	*env)
 	env->start_time = curr_time();
 	while (i < env->nbr_philos)
 	{
-		init_philosopher(&(env->phil[i]), env, i);
 		if (pthread_mutex_init(&(env->fork[i]), NULL))
 			return (2);
+		i++;
+	}
+	i = 0;
+	while (i < env->nbr_philos)
+	{
+		init_philosopher(&(env->phil[i]), env, i);
 		if (pthread_create(&(env->phil[i].th), NULL, &routine, (void *)&(env->phil[i])))
             return (3);
 		i++;
@@ -95,7 +93,7 @@ int	init(t_environment *env, char **av)
 		env->max_eat_times = ft_atoi(av[5]);
 	else
 		env->max_eat_times = -1;
-	if (env->nbr_philos < 2 || env->die_time < 0 || env->eat_time < 0
+	if (env->nbr_philos < 1 || env->die_time < 0 || env->eat_time < 0
 		|| env->sleep_time < 0 || env->nbr_philos > 200)
 		return (1);
 	if ((err = init_threads(env)))
