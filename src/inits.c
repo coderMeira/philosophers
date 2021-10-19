@@ -49,8 +49,8 @@ static int	init_philosopher(t_phil	*phil, t_environment *env, int i)
 		phil->times_eated = 0;
 		phil->env = env;
 		phil->th = NULL;
-		phil->left_fork = &(env->fork[phil->nbr]);
-		phil->right_fork = &(env->fork[phil->nbr - 1]);
+		phil->left_fork = &(phil->env->fork[phil->nbr - 1]);
+		phil->right_fork = &(phil->env->fork[phil->nbr]);
 		if (phil->nbr == env->nbr_philos)
 			phil->left_fork = &(env->fork[0]);
 		return (0);
