@@ -38,6 +38,7 @@ typedef	struct	s_environment
 	int				max_eat_times;
 	t_phil			phil[200];
 	pthread_mutex_t	fork[200];
+	pthread_mutex_t	die;
 }				t_environment;
 
 //LIBFT
@@ -55,9 +56,11 @@ int			print_msg(char *msg, t_phil *phil);
 //TIME
 long long	curr_time(void);
 long long	time_diff(long long start_time, long long end_time);
+int			ft_usleep(long long start_time, long long sleeping_time,
+						t_phil *phil);
 
 //PHILS
-int			grab_forks(t_phil *phil);
+int			kill(t_phil *phil);
 
 
 #endif

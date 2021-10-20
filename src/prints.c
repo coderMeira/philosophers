@@ -1,22 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   prints.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/19 19:53:07 by fmeira            #+#    #+#             */
+/*   Updated: 2021/10/20 19:25:27 by fmeira           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/philosophers.h"
 
 int	print_msg(char *msg, t_phil *phil)
 {
 	long long	starve;
 
-	starve = phil->last_eated - phil->env->start_time;
+	if (!phil->last_eated)
+		starve = curr_time() - phil->env->start_time;
+	else
+		starve = curr_time() - phil->last_eated;
+	//printf("phil %d starve = %lld\n", phil->nbr, starve);
 	if (!phil->env->no_deads)
 		return (1);
 	if (starve > phil->env->die_time)
-	{
-		phil->env->no_deads = false;
-		if (phil->right)
-			pthread_mutex_unlock(phil->right_fork);
-		if(phil->left)
-			pthread_mutex_unlock(phil->left_fork);
-		printf("%lli\t%d %s\n", (curr_time() - phil->env->start_time), phil->nbr, "died");
-		return (1);
-	}
+		return (kill(phil));
 	if(phil->times_eated == phil->env->max_eat_times)
 	{
 		if (phil->right)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   time.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/19 19:53:12 by fmeira            #+#    #+#             */
+/*   Updated: 2021/10/20 13:15:30 by fmeira           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/philosophers.h"
 
 long long	curr_time(void)
@@ -8,12 +20,13 @@ long long	curr_time(void)
 	return ((tp.tv_sec * (long long)1000) + (tp.tv_usec / 1000));
 }
 
-long long	time_diff(long long start_time, long long end_time)
+int	ft_usleep(long long start_time, long long sleeping_time, t_phil *phil)
 {
-	long long	start_time_ms;
-	long long	end_time_ms;
-
-	start_time_ms = start_time * 1000 + (start_time / 1000);
-	end_time_ms = end_time * 1000 + (end_time / 1000);
-	return (end_time_ms - start_time_ms);
+	while ((curr_time() - start_time) <= sleeping_time)
+	{
+		if ((curr_time() - phil->last_eated) >= phil->env->die_time)
+			return (kill(phil));
+		//usleep(sleeping_time - sleeping_time / 1);
+	}
+	return (0);
 }
