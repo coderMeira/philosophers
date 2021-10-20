@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/19 19:52:39 by fmeira            #+#    #+#             */
+/*   Updated: 2021/10/20 19:54:49 by fmeira           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/philosophers.h"
 
 static t_bool	check_args(int ac, char **av)
@@ -32,7 +44,7 @@ static int	check(int i)
 	return (0);
 }
 
-static int destroy_mutexes(t_environment *env)
+static int	destroy_mutexes(t_environment *env)
 {
 	int	i;
 
@@ -40,13 +52,15 @@ static int destroy_mutexes(t_environment *env)
 	while (i < env->nbr_philos)
 	{
 		if (pthread_mutex_destroy(&(env->fork[i])))
-			return (printf("Failed to destroy mutexes\n"));
+			return (printf("Failed to destroy forks mutexes\n"));
 		i++;
 	}
+	// if (pthread_mutex_destroy(&env->die))
+	// 	return (printf("Failed to destroy die mutex\n"));
 	return (0);
 }
 
-static void wait_for_threads(t_environment *env)
+static void	wait_for_threads(t_environment *env)
 {
 	int	i;
 
