@@ -6,7 +6,7 @@
 /*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 19:52:39 by fmeira            #+#    #+#             */
-/*   Updated: 2021/10/20 19:54:49 by fmeira           ###   ########.fr       */
+/*   Updated: 2021/10/21 13:48:41 by fmeira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ static int	destroy_mutexes(t_environment *env)
 			return (printf("Failed to destroy forks mutexes\n"));
 		i++;
 	}
-	// if (pthread_mutex_destroy(&env->die))
-	// 	return (printf("Failed to destroy die mutex\n"));
+	if (pthread_mutex_destroy(&env->die))
+		return (printf("Failed to destroy die mutex\n"));
 	return (0);
 }
 

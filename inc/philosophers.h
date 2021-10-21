@@ -17,8 +17,8 @@ typedef	enum	s_bool
 typedef	struct	s_phil
 {
 	int						nbr;
-	t_bool					left;
-	t_bool					right;
+	t_bool					left_hand;
+	t_bool					right_hand;
 	long long				last_eated;
 	int						times_eated;
 	pthread_mutex_t			*left_fork;

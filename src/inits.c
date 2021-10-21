@@ -6,7 +6,7 @@
 /*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 19:52:52 by fmeira            #+#    #+#             */
-/*   Updated: 2021/10/20 19:57:48 by fmeira           ###   ########.fr       */
+/*   Updated: 2021/10/21 17:39:43 by fmeira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,23 @@ static void	*routine(void *arg)
 	phil = (t_phil *)arg;
 	printf("philo %d\n", phil->nbr);
 	//printf("last ate %lld\n", phil->last_eated);
-	// if (phil->nbr % 2)
-	// 	usleep(phil->env->eat_time * 1500);
+	if (phil->nbr % 2)
+		usleep(phil->env->eat_time * 1500);
 	while(phil->env->no_deads)
 	{
-		if (!(pthread_mutex_lock(phil->left_fork) && !(pthread_mutex_lock(phil->right_fork))))
+		if (!phil->left_hand && !phil->right_hand)
 		{
-			if(print_msg("has taken a fork", phil))
-				return NULL;
-			if(print_msg("has taken a fork", phil))
-				return NULL;
-			phil->left = true;
-			phil->right = true;
+			phil->left_hand = true;
+			phil->right_hand = true;
+			if (!(pthread_mutex_lock(phil->left_fork) && !(pthread_mutex_lock(phil->right_fork))))
+			{
+				if(print_msg("has taken a fork", phil))
+					return NULL;
+				if(print_msg("has taken a fork", phil))
+					return NULL;
+			}
 		}
-		if (phil->left && phil->right)
+		if (phil->left_hand && phil->right_hand)
 		{
 			phil->times_eated++;
 			phil->last_eated = curr_time();
@@ -42,8 +45,8 @@ static void	*routine(void *arg)
 				return NULL;
 			pthread_mutex_unlock(phil->right_fork);
 			pthread_mutex_unlock(phil->left_fork);
-			phil->left = false;
-			phil->right = false;
+			phil->left_hand = false;
+			phil->right_hand = false;
 			if(print_msg("is sleeping", phil))
 				return NULL;
 			if (ft_usleep(curr_time(), phil->env->sleep_time, phil))
@@ -58,8 +61,8 @@ static void	*routine(void *arg)
 static int	init_philosopher(t_phil	*phil, t_environment *env, int i)
 {
 		phil->nbr = i + 1;
-		phil->left = false;
-		phil->right = false;
+		phil->left_hand = false;
+		phil->right_hand = false;
 		phil->last_eated = 0;
 		phil->times_eated = 0;
 		phil->env = env;
@@ -94,8 +97,8 @@ static int	init_threads(t_environment	*env)
             return (3);
 		i++;
 	}
-		if (pthread_mutex_init(&env->die, NULL))
-			return (2);
+	if (pthread_mutex_init(&env->die, NULL))
+		return (2);
 	return (0);
 }
 

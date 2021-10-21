@@ -6,7 +6,7 @@
 /*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 19:53:07 by fmeira            #+#    #+#             */
-/*   Updated: 2021/10/20 19:25:27 by fmeira           ###   ########.fr       */
+/*   Updated: 2021/10/21 17:39:47 by fmeira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ int	print_msg(char *msg, t_phil *phil)
 		return (kill(phil));
 	if(phil->times_eated == phil->env->max_eat_times)
 	{
-		if (phil->right)
+		if (phil->right_hand)
 			pthread_mutex_unlock(phil->right_fork);
-		if(phil->left)
+		if(phil->left_hand)
 			pthread_mutex_unlock(phil->left_fork);
 		return (1);
 	}
