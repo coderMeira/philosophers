@@ -8,9 +8,9 @@ int	kill(t_phil *phil)
 		phil->env->no_deads = false;
 		printf("%lli\t%d %s\n", (curr_time() - phil->env->start_time), phil->nbr, "died");
 	}
-	if (phil->right)
+	if (phil->right_hand)
 		pthread_mutex_unlock(phil->right_fork);
-	if(phil->left)
+	if(phil->left_hand)
 		pthread_mutex_unlock(phil->left_fork);
 	pthread_mutex_unlock(&phil->env->die);
 	return (1);
