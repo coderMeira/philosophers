@@ -3,7 +3,7 @@
 
 MAKEFLAGS	+= -s
 
-CFLAGS		= -Wall -Werror -Wextra -g -pthread
+CFLAGS		= -Wall -Werror -Wextra -g -pthread #-fsanitize=thread
 
 NAME		= philo
 

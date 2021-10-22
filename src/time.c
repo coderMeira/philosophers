@@ -6,7 +6,7 @@
 /*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 19:53:12 by fmeira            #+#    #+#             */
-/*   Updated: 2021/10/21 13:59:47 by fmeira           ###   ########.fr       */
+/*   Updated: 2021/10/22 19:44:07 by fmeira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ int	ft_usleep(long long start_time, long long sleeping_time, t_phil *phil)
 {
 	while ((curr_time() - start_time) <= sleeping_time)
 	{
+		if (!phil->env->no_deads)
+			return (1);
 		if ((curr_time() - phil->last_eated) >= phil->env->die_time)
 			return (kill(phil));
 		//usleep(sleeping_time - sleeping_time / 1);
