@@ -6,7 +6,7 @@
 /*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 19:52:52 by fmeira            #+#    #+#             */
-/*   Updated: 2021/10/21 17:39:43 by fmeira           ###   ########.fr       */
+/*   Updated: 2021/10/22 20:12:33 by fmeira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,43 +17,36 @@ static void	*routine(void *arg)
 	t_phil	*phil;
 
 	phil = (t_phil *)arg;
-	printf("philo %d\n", phil->nbr);
+	//printf("philo %d\n", phil->nbr);
 	//printf("last ate %lld\n", phil->last_eated);
 	if (phil->nbr % 2)
 		usleep(phil->env->eat_time * 1500);
 	while(phil->env->no_deads)
 	{
-		if (!phil->left_hand && !phil->right_hand)
-		{
-			phil->left_hand = true;
-			phil->right_hand = true;
-			if (!(pthread_mutex_lock(phil->left_fork) && !(pthread_mutex_lock(phil->right_fork))))
-			{
-				if(print_msg("has taken a fork", phil))
-					return NULL;
-				if(print_msg("has taken a fork", phil))
-					return NULL;
-			}
-		}
-		if (phil->left_hand && phil->right_hand)
-		{
-			phil->times_eated++;
-			phil->last_eated = curr_time();
-			if(print_msg("is eating", phil))
-				return NULL;
-			if (ft_usleep(curr_time(), phil->env->eat_time, phil))
-				return NULL;
-			pthread_mutex_unlock(phil->right_fork);
-			pthread_mutex_unlock(phil->left_fork);
-			phil->left_hand = false;
-			phil->right_hand = false;
-			if(print_msg("is sleeping", phil))
-				return NULL;
-			if (ft_usleep(curr_time(), phil->env->sleep_time, phil))
-				return (NULL);
-			if(print_msg("is thinking", phil))
-				return NULL;
-		}
+		pthread_mutex_lock(phil->left_fork);
+		pthread_mutex_lock(phil->right_fork);
+		phil->left_hand = true;
+		phil->right_hand = true;
+		if(print_msg("has taken a fork", phil))
+			return NULL;
+		if(print_msg("has taken a fork", phil))
+			return NULL;
+		phil->times_eated++;
+		phil->last_eated = curr_time();
+		if(print_msg("is eating", phil))
+			return NULL;
+		if (ft_usleep(curr_time(), phil->env->eat_time, phil))
+			return NULL;
+		pthread_mutex_unlock(phil->right_fork);
+		pthread_mutex_unlock(phil->left_fork);
+		phil->left_hand = false;
+		phil->right_hand = false;
+		if(print_msg("is sleeping", phil))
+			return NULL;
+		if (ft_usleep(curr_time(), phil->env->sleep_time, phil))
+			return (NULL);
+		if(print_msg("is thinking", phil))
+			return NULL;
 	}
 	return NULL;
 }
@@ -83,6 +76,8 @@ static int	init_threads(t_environment	*env)
 
 	i = 0;
 	env->start_time = curr_time();
+	if (pthread_mutex_init(&env->die, NULL))
+		return (2);
 	while (i < env->nbr_philos)
 	{
 		if (pthread_mutex_init(&(env->fork[i]), NULL))
@@ -97,8 +92,6 @@ static int	init_threads(t_environment	*env)
             return (3);
 		i++;
 	}
-	if (pthread_mutex_init(&env->die, NULL))
-		return (2);
 	return (0);
 }
 
