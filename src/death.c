@@ -15,20 +15,3 @@ int	kill(t_phil *phil)
 	pthread_mutex_unlock(&phil->env->die);
 	return (1);
 }
-
-// int	grab_forks(t_phil *phil)
-// {
-// 	if (!right_phil && !phil->right && !(pthread_mutex_lock(phil->right_fork)))
-// 	{
-// 		if(print_msg("has taken a fork", phil))
-// 			return (1);
-// 		phil->right = true;
-// 	}
-// 	if (!left_phil && !phil->left && !(pthread_mutex_lock(phil->left_fork)))
-// 	{
-// 		if(print_msg("has taken a fork", phil))
-// 			return (1);
-// 		phil->left = true;
-// 	}
-// 	return (0);
-// }

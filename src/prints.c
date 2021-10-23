@@ -6,7 +6,7 @@
 /*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 19:53:07 by fmeira            #+#    #+#             */
-/*   Updated: 2021/10/22 17:15:55 by fmeira           ###   ########.fr       */
+/*   Updated: 2021/10/23 20:17:54 by fmeira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,13 @@ int	print_msg(char *msg, t_phil *phil)
 		starve = curr_time() - phil->last_eated;
 	//printf("phil %d starve = %lld\n", phil->nbr, starve);
 	if (!phil->env->no_deads)
+	{
+		if (phil->right_hand)
+				pthread_mutex_unlock(phil->right_fork);
+		if(phil->left_hand)
+				pthread_mutex_unlock(phil->left_fork);
 		return (1);
+	}
 	if (starve > phil->env->die_time)
 		return (kill(phil));
 	if(phil->times_eated == phil->env->max_eat_times)
