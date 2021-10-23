@@ -6,7 +6,7 @@
 /*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 19:52:52 by fmeira            #+#    #+#             */
-/*   Updated: 2021/10/22 20:12:33 by fmeira           ###   ########.fr       */
+/*   Updated: 2021/10/23 20:21:48 by fmeira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,8 @@ static void	*routine(void *arg)
 	t_phil	*phil;
 
 	phil = (t_phil *)arg;
-	//printf("philo %d\n", phil->nbr);
-	//printf("last ate %lld\n", phil->last_eated);
 	if (phil->nbr % 2)
-		usleep(phil->env->eat_time * 1500);
+		usleep(phil->env->eat_time * 1000);
 	while(phil->env->no_deads)
 	{
 		pthread_mutex_lock(phil->left_fork);
