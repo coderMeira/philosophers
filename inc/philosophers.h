@@ -1,20 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosophers.h                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/24 20:30:47 by fmeira            #+#    #+#             */
+/*   Updated: 2021/10/24 22:59:54 by fmeira           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
-#include <stdio.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/time.h>
+# include <stdio.h>
+# include <pthread.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <sys/time.h>
 
-typedef	enum	s_bool
+typedef enum s_bool
 {
 	false,
 	true
 }				t_bool;
 
-typedef	struct	s_phil
+typedef struct s_phil
 {
 	int						nbr;
 	t_bool					left_hand;
@@ -27,7 +38,7 @@ typedef	struct	s_phil
 	pthread_t				th;
 }				t_phil;
 
-typedef	struct	s_environment
+typedef struct s_environment
 {
 	int				nbr_philos;
 	t_bool			no_deads;
@@ -57,10 +68,14 @@ int			print_msg(char *msg, t_phil *phil);
 long long	curr_time(void);
 long long	time_diff(long long start_time, long long end_time);
 int			ft_usleep(long long start_time, long long sleeping_time,
-						t_phil *phil);
+				t_phil *phil);
 
-//PHILS
+//DEATH
 int			kill(t_phil *phil);
+int			unlock_forks(t_phil *phil);
+int			he_is_starving(t_phil *phil);
 
+//ROUTINE OPERATIONS
+void		*routine(void *arg);
 
 #endif

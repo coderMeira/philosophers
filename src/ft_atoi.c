@@ -1,33 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   time.c                                             :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/19 19:53:12 by fmeira            #+#    #+#             */
-/*   Updated: 2021/10/24 22:16:44 by fmeira           ###   ########.fr       */
+/*   Created: 2021/10/24 23:03:08 by fmeira            #+#    #+#             */
+/*   Updated: 2021/10/24 23:03:32 by fmeira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosophers.h"
 
-long long	curr_time(void)
+static t_bool	stuff(char c)
 {
-	struct timeval	tp;
-
-	gettimeofday(&tp, NULL);
-	return ((tp.tv_sec * (long long)1000) + (tp.tv_usec / 1000));
+	if (c == ' ' || c == '\t' || c == '\n'
+		|| c == '\r' || c == '\v' || c == '\f' || c == '+')
+		return (true);
+	return (false);
 }
 
-int	ft_usleep(long long start_time, long long sleeping_time, t_phil *phil)
+int	ft_atoi(const char *str)
 {
-	while ((curr_time() - start_time) <= sleeping_time)
+	int		signal;
+	int		result;
+	char	*p;
+
+	p = (char *)str;
+	signal = 1;
+	result = 0;
+	while (stuff(*p))
+		p++;
+	if (*p == '-')
 	{
-		if (!phil->env->no_deads)
-			return (unlock_forks(phil));
-		if ((curr_time() - phil->last_eated) >= phil->env->die_time)
-			return (kill(phil));
+		p++;
+		signal = -1;
 	}
-	return (0);
+	while (*p > 47 && *p < 58)
+	{
+		result = result * 10 + *p - 48;
+		p++;
+	}
+	return (result * signal);
 }
