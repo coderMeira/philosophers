@@ -6,7 +6,7 @@
 /*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 20:40:14 by fmeira            #+#    #+#             */
-/*   Updated: 2021/10/24 23:01:02 by fmeira           ###   ########.fr       */
+/*   Updated: 2021/10/25 21:35:26 by fmeira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,28 +31,70 @@ static int	starve(t_phil *phil)
 	return (0);
 }
 
-int	he_is_starving(t_phil *phil)
+static int	check_starve(t_bool *left, t_bool *right, t_phil *phil)
 {
-	if (phil->nbr == phil->env->nbr_philos)
+	while (*(left) || *(right))
 	{
-		while (phil->env->phil[phil->nbr - 2].left_hand
-			|| phil->env->phil[0].right_hand)
-		{
-			if (starve(phil))
-				return (1);
-		}
-	}
-	else
-	{
-		while (phil->env->phil[phil->nbr - 2].left_hand
-			|| phil->env->phil[phil->nbr].right_hand)
-		{
-			if (starve(phil))
-				return (1);
-		}
+		if (starve(phil))
+			return (1);
 	}
 	return (0);
 }
+
+int	he_is_starving(t_phil *phil)
+{
+	t_bool	*left_of_right;
+	t_bool	*right_of_left;
+
+	if (phil->nbr == phil->env->nbr_philos)
+	{
+		left_of_right = &(phil->env->phil[phil->nbr - 2].left_hand);
+		right_of_left = &(phil->env->phil[0].right_hand);
+	}
+	if (phil->nbr == 1)
+	{
+		left_of_right = &(phil->env->phil[phil->env->nbr_philos - 1].left_hand);
+		right_of_left = &(phil->env->phil[1].right_hand);
+	}
+	else
+	{
+		left_of_right = &(phil->env->phil[phil->nbr - 2].left_hand);
+		right_of_left = &(phil->env->phil[phil->nbr].right_hand);
+	}
+	return (check_starve(left_of_right, right_of_left, phil));
+}
+
+// int	he_is_starving(t_phil *phil)
+// {
+// 	if (phil->nbr == phil->env->nbr_philos)
+// 	{
+// 		while (phil->env->phil[phil->nbr - 2].left_hand
+// 			|| phil->env->phil[0].right_hand)
+// 		{
+// 			if (starve(phil))
+// 				return (1);
+// 		}
+// 	}
+// 	else if (phil->nbr == 1)
+// 	{
+// 		while (phil->env->phil[phil->env->nbr_philos - 1].left_hand
+// 			|| phil->env->phil[1].right_hand)
+// 		{
+// 			if (starve(phil))
+// 				return (1);
+// 		}
+// 	}
+// 	else
+// 	{
+// 		while (phil->env->phil[phil->nbr - 2].left_hand
+// 			|| phil->env->phil[phil->nbr].right_hand)
+// 		{
+// 			if (starve(phil))
+// 				return (1);
+// 		}
+// 	}
+// 	return (0);
+// }
 
 int	kill(t_phil *phil)
 {

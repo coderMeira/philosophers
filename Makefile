@@ -3,7 +3,7 @@
 
 MAKEFLAGS	+= -s
 
-CFLAGS		= -Wall -Werror -Wextra -g -pthread #-fsanitize=thread
+CFLAGS		= -Wall -Werror -Wextra -g -pthread -fsanitize=address
 
 NAME		= philo
 

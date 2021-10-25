@@ -6,7 +6,7 @@
 /*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 19:52:39 by fmeira            #+#    #+#             */
-/*   Updated: 2021/10/23 20:21:48 by fmeira           ###   ########.fr       */
+/*   Updated: 2021/10/25 19:52:29 by fmeira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,13 @@ int	main(int ac, char **av)
 	t_environment	*env;
 
 	env = NULL;
-	if ((ft_atoi(av[1])) == 1)
-		return (printf("%d\t1 died\n", ft_atoi(av[2])));
+	if (ft_atoi(av[1]) == 1)
+	{
+		printf("0\t1 has taken a fork\n");
+		usleep(ft_atoi(av[2]) * 1000);
+		printf("%d\t1 died\n", ft_atoi(av[2]));
+		return (0);
+	}
 	if (check_args(ac, av))
 		return (-1);
 	env = malloc(sizeof(t_environment));
