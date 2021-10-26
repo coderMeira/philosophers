@@ -6,7 +6,7 @@
 /*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 19:52:52 by fmeira            #+#    #+#             */
-/*   Updated: 2021/10/24 23:10:27 by fmeira           ###   ########.fr       */
+/*   Updated: 2021/10/26 01:14:27 by fmeira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ static int	init_threads(t_environment	*env)
 	i = 0;
 	env->start_time = curr_time();
 	if (pthread_mutex_init(&env->die, NULL))
+		return (2);
+	if (pthread_mutex_init(&env->print, NULL))
 		return (2);
 	while (i < env->nbr_philos)
 	{

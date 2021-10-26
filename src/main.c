@@ -6,7 +6,7 @@
 /*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 19:52:39 by fmeira            #+#    #+#             */
-/*   Updated: 2021/10/25 19:52:29 by fmeira           ###   ########.fr       */
+/*   Updated: 2021/10/26 01:14:55 by fmeira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ int	main(int ac, char **av)
 	t_environment	*env;
 
 	env = NULL;
+	if (ac != 5 && ac != 6)
+		return (printf("Wrong nbr of arguments provided\n"));
 	if (ft_atoi(av[1]) == 1)
 	{
 		printf("0\t1 has taken a fork\n");

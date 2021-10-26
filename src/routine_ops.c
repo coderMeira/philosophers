@@ -6,7 +6,7 @@
 /*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 22:54:52 by fmeira            #+#    #+#             */
-/*   Updated: 2021/10/25 21:17:35 by fmeira           ###   ########.fr       */
+/*   Updated: 2021/10/26 17:49:04 by fmeira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,11 @@ static int	he_died_eating(t_phil *phil)
 		return (1);
 	if (print_msg("has taken a fork", phil))
 		return (1);
-	phil->times_eated++;
 	phil->last_eated = curr_time();
 	if (print_msg("is eating", phil))
 		return (1);
+	if (++phil->times_eated == phil->env->max_eat_times)
+		return (unlock_forks(phil));
 	if (ft_usleep(curr_time(), phil->env->eat_time, phil))
 		return (1);
 	phil->left_hand = false;
@@ -46,8 +47,6 @@ void	*routine(void *arg)
 
 	phil = (t_phil *)arg;
 	phil->last_eated = phil->env->start_time;
-	if (phil->nbr % 2)
-		usleep(phil->env->eat_time * 1000);
 	while (phil->env->no_deads)
 	{
 		if (he_is_starving(phil))
