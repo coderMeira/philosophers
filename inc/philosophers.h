@@ -6,7 +6,7 @@
 /*   By: fmeira <fmeira@student.42lisboa.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 20:30:47 by fmeira            #+#    #+#             */
-/*   Updated: 2021/10/24 22:59:54 by fmeira           ###   ########.fr       */
+/*   Updated: 2021/10/26 17:16:02 by fmeira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_environment
 	t_phil			phil[200];
 	pthread_mutex_t	fork[200];
 	pthread_mutex_t	die;
+	pthread_mutex_t	print;
 }				t_environment;
 
 //LIBFT
